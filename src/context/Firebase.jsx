@@ -6,13 +6,13 @@ import { getFirestore, collection, addDoc, getDocs, getDoc, query, where } from 
 const FirebaseContext = createContext(null);
 
 const firebaseConfig = {
-  apiKey: /* api key */,
-  authDomain: /* auth domain */,
-  databaseURL:  /* database url */,
-  projectId: /* project id */,
-  storageBucket: /* storage bucket */,
-  messagingSenderId: /* messaging sender id */,
-  appId: /* app id */
+  apiKey: "AIzaSyB6hWhqgXhoffH3dWH7lGDNEEBgctPlQq8",
+  authDomain: "my-app-15f81.firebaseapp.com",
+  databaseURL: "https://my-app-15f81-default-rtdb.firebaseio.com",
+  projectId: "my-app-15f81",
+  storageBucket: "my-app-15f81.appspot.com",
+  messagingSenderId: "1088294236358",
+  appId: "1:1088294236358:web:25bc983645143e612da7c7"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -59,23 +59,25 @@ export const FirebaseProvider = (props) => {
     });
   };
 
-  const createRequestData = async (name, contact, email, blood, date) => {
+  const createRequestData = async (name, contact, email, blood, date, units) => {
     return await addDoc(collection(firestore, 'requests'), {
       name,
       email,
       contact,
       date,
-      blood
+      blood,
+      units
     });
   };
 
-  const createDonateData = async (name, contact, email, blood, date, hospital, time) => {
+  const createDonateData = async (name, contact, email, blood, date, hospital, time, units) => {
     return await addDoc(collection(firestore, 'donate'), {
       name,
       email,
       contact,
       date,
       blood,
+      units,
       hospital,
       time
     });
