@@ -3,20 +3,30 @@ import { Button, Form } from "react-bootstrap";
 import { useFirebase } from "../context/Firebase";
 import { useNavigate } from "react-router-dom";
 
-
 const Request = () => {
     const [name, setName] = useState('');
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
     const [date, setDate] = useState('');
     const [blood, setBlood] = useState('');
+    const [units, setUnits] = useState('');
 
     const firebase = useFirebase();
     const navigate = useNavigate();
 
-    const handleSubmit =async (e) => {
+    const validateContact = (contact) => {
+        return /^[0-9]{10}$/.test(contact); // Validates that contact is exactly 10 digits
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await firebase.createRequestData(name, contact, email, blood, date);
+
+        if (!validateContact(contact)) {
+            alert('Contact number must be exactly 10 digits');
+            return;
+        }
+
+        await firebase.createRequestData(name, contact, email, blood, date, units);
         navigate('/');
     };
 
@@ -41,6 +51,9 @@ const Request = () => {
                     value={contact}
                     onChange={(e) => setContact(e.target.value)}
                 />
+                <Form.Text className="text-muted">
+                    Must be exactly 10 digits
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBloodGroup">
@@ -60,6 +73,16 @@ const Request = () => {
                     <option value="AB+">AB+</option>
                     <option value="AB-">AB-</option>
                 </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicUnits">
+                <Form.Label>Units of Blood</Form.Label>
+                <Form.Control
+                    type="number"
+                    placeholder="Enter units"
+                    value={units}
+                    onChange={(e) => setUnits(e.target.value)}
+                />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicDate">
