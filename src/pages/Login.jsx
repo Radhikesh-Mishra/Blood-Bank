@@ -9,9 +9,16 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [key, setKey] = useState('');
+    const [error, setError] = useState('');
 
     const firebase = useFirebase();
     const navigate = useNavigate();
+
+    const validPasskeys = {
+        hospital1: "147",
+        hospital2: "258",
+        hospital3: "369",
+    };
 
     const handleFormTypeChange = (val) => {
         setFormType(val);
@@ -19,13 +26,27 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formType === 'user') {
-            await firebase.logInUserWithEmailAndPassword(email, password);
-        } else if (formType === 'hospital' && (key !== '147' && key !== '258' && key !== '369')) {
-            alert('Wrong Pass Key for the hospital');
-            return;
-        } else {
-            await firebase.logInUserWithEmailAndPassword(email, password);
+        setError(''); // Clear previous error
+
+        try {
+            if (formType === 'user') {
+                await firebase.logInUserWithEmailAndPassword(email, password);
+            } else if (formType === 'hospital') {
+                if (!hospital) {
+                    setError("Please select a hospital.");
+                    return;
+                }
+
+                if (validPasskeys[hospital] !== key) {
+                    setError("Wrong Pass Key for the hospital");
+                    return;
+                }
+
+                await firebase.logInUserWithEmailAndPassword(email, password);
+            }
+        } catch (error) {
+            console.error("Error during login: ", error);
+            setError(error.message);
         }
     };
 
@@ -105,6 +126,8 @@ const Login = () => {
                         />
                     </Form.Group>
                 )}
+
+                {error && <p style={{ color: "red" }}>{error}</p>}
 
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Button variant="primary" type="submit">
