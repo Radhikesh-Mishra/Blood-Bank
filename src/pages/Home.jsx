@@ -32,7 +32,7 @@ const Homepage = () => {
                     className="d-block w-100"
                     src="public/blood-bank.jpg"
                     alt="Request Blood"
-                    style={{ objectFit: 'cover', minHeight: '29vh', maxHeight:'100vh', width:'100%', marginTop:'3%' }}
+                    style={{ objectFit: 'cover', maxHeight: '80vh' }}
                 />
                 <Carousel.Caption className="text-end" style={{ marginRight: '1%', marginBottom:'10%' }}>
                     <Button variant="primary" onClick={handleClickRequest}>Request Blood</Button>
