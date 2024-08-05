@@ -9,8 +9,15 @@ const Info = () => {
 
     useEffect(() => {
         const fetchRequests = async () => {
-            const requestsSnapshot = await firebase.fetchRequests();
-            setRequests(requestsSnapshot.docs.map(doc => doc.data()));
+            console.log("Fetching requests...");
+            try {
+                const requestsSnapshot = await firebase.fetchRequests();
+                const requestsData = requestsSnapshot.docs.map(doc => doc.data());
+                setRequests(requestsData);
+                console.log("Requests fetched: ", requestsData);
+            } catch (error) {
+                console.error("Error fetching requests: ", error);
+            }
         };
 
         fetchRequests();
@@ -20,10 +27,13 @@ const Info = () => {
         const fetchHospitalAndDonations = async () => {
             try {
                 const user = firebase.user;
+                console.log("User: ", user);
                 if (user) {
                     const hospitalData = await firebase.fetchHospital(user.email);
+                    console.log("Hospital data: ", hospitalData);
                     const donationsData = await firebase.fetchDonate(hospitalData.hospital);
                     setDonations(donationsData);
+                    console.log("Donations fetched: ", donationsData);
                 }
             } catch (error) {
                 console.error("Error fetching donations: ", error);
@@ -31,7 +41,7 @@ const Info = () => {
         };
 
         fetchHospitalAndDonations();
-    }, [firebase]);
+    }, [firebase.user]);
 
     return (
         <Container>
