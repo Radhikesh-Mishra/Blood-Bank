@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import { useFirebase } from "../context/Firebase";
-
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
     const [formType, setFormType] = useState('user');
-
     const [name, setName] = useState('');
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [hospital, setHospital] = useState('');
+    const [error, setError] = useState('');
 
     const firebase = useFirebase();
+    const navigate = useNavigate();
 
     const handleFormTypeChange = (val) => {
         setFormType(val);
@@ -30,14 +31,33 @@ const Signin = () => {
 
     const handleCreateUser = async (e) => {
         e.preventDefault();
-        await firebase.signInUserWithEmailAndPassword(email, password);
-        await firebase.createUserDate(name, contact, email);
+        setError(''); // Clear previous error
+
+        if (contact.length !== 10) {
+            setError('Contact number must be exactly 10 digits.');
+            return;
+        }
+
+            await firebase.signInUserWithEmailAndPassword(email, password);
+            await firebase.createUserData(name, contact, email);
     };
 
     const handleCreateHospitalStaff = async (e) => {
         e.preventDefault();
-        await firebase.signInUserWithEmailAndPassword(email, password);
-        await firebase.createHospitalData(name, contact, email, hospital);
+        setError(''); // Clear previous error
+
+        if (contact.length !== 10) {
+            setError('Contact number must be exactly 10 digits.');
+            return;
+        }
+
+        try {
+            await firebase.signInUserWithEmailAndPassword(email, password);
+            await firebase.createHospitalData(name, contact, email, hospital);
+        } catch (error) {
+            console.error("Error during hospital staff creation: ", error);
+            setError(error.message);
+        }
     };
 
     return (
@@ -79,6 +99,8 @@ const Signin = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} value={password} />
                     </Form.Group>
+
+                    {error && <p style={{ color: "red" }}>{error}</p>}
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Button variant="primary" type="submit">
@@ -124,6 +146,7 @@ const Signin = () => {
                         <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} value={password} />
                     </Form.Group>
 
+                    {error && <p style={{ color: "red" }}>{error}</p>}
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Button variant="primary" type="submit">
