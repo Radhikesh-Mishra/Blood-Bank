@@ -11,14 +11,24 @@ const Donate = () => {
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [blood, setBlood] = useState('');
+    const [units, setUnits] = useState('');
 
     const firebase = useFirebase();
     const navigate = useNavigate();
     
+    const validateContact = (contact) => {
+        return /^[0-9]{10}$/.test(contact); // Validates that contact is exactly 10 digits
+    };
+
     const handleSubmit = async(e) => {
         e.preventDefault();
-        
-        await firebase.createDonateData(name, contact, email, blood, date, hospital, time);
+
+        if (!validateContact(contact)) {
+            alert('Contact number must be exactly 10 digits');
+            return;
+        }
+
+        await firebase.createDonateData(name, contact, email, blood, date, hospital, time, units);
         navigate('/');
     };
 
@@ -43,6 +53,9 @@ const Donate = () => {
                     value={contact} 
                     onChange={(e) => setContact(e.target.value)}
                 />
+                <Form.Text className="text-muted">
+                    Must be exactly 10 digits
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBloodGroup">
@@ -62,6 +75,16 @@ const Donate = () => {
                     <option value="AB+">AB+</option>
                     <option value="AB-">AB-</option>
                 </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicUnits">
+                <Form.Label>Units of Blood</Form.Label>
+                <Form.Control 
+                    type="number" 
+                    placeholder="Enter units" 
+                    value={units} 
+                    onChange={(e) => setUnits(e.target.value)}
+                />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicHospital">
