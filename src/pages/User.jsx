@@ -24,6 +24,10 @@ const User = () => {
     navigate('/');
   };
 
+  const handleNavigate = () => {
+    navigate('/info');
+  }
+
   if (!userDetails) return null;
 
   return (
@@ -43,9 +47,14 @@ const User = () => {
                   </>
                 )}
               </Card.Text>
-              <Button variant="primary" onClick={handleLogout}>
+             <div style={{display:'flex', justifyContent:'space-between'}}>
+             {userDetails.hospital && (
+                <Button variant='danger' onClick={handleNavigate}>View Details</Button>
+              )}
+               <Button variant="primary" onClick={handleLogout}>
                 Logout
               </Button>
+             </div>
             </Card.Body>
           </Card>
         </Col>
