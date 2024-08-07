@@ -6,13 +6,7 @@ import { getFirestore, collection, addDoc, getDocs, getDoc, query, where } from 
 const FirebaseContext = createContext(null);
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6hWhqgXhoffH3dWH7lGDNEEBgctPlQq8",
-  authDomain: "my-app-15f81.firebaseapp.com",
-  databaseURL: "https://my-app-15f81-default-rtdb.firebaseio.com",
-  projectId: "my-app-15f81",
-  storageBucket: "my-app-15f81.appspot.com",
-  messagingSenderId: "1088294236358",
-  appId: "1:1088294236358:web:25bc983645143e612da7c7"
+  // firebase configurations
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
